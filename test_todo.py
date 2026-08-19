@@ -54,3 +54,19 @@ def test_search_tasks(tmp_path, monkeypatch, capsys):
     out = capsys.readouterr().out
     assert "Estudar Python" in out
     assert "Comprar leite" not in out
+
+
+def test_add_task_with_priority(tmp_path, monkeypatch):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Tarefa urgente", priority="alta")
+    tasks = todo.load_tasks()
+    assert tasks[0]["priority"] == "alta"
+
+
+def test_add_task_default_priority(tmp_path, monkeypatch):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Tarefa comum")
+    tasks = todo.load_tasks()
+    assert tasks[0]["priority"] == "normal"
