@@ -54,9 +54,14 @@ def remove_task(index):
     print(f"Tarefa removida: {removed['description']}")
 
 
+def clear_tasks():
+    save_tasks([])
+    print("Todas as tarefas foram removidas.")
+
+
 def main():
     if len(sys.argv) < 2:
-        print("Uso: python todo.py <add|list|done|remove> [argumentos]")
+        print("Uso: python todo.py <add|list|done|remove|clear> [argumentos]")
         return
 
     command = sys.argv[1]
@@ -78,6 +83,8 @@ def main():
             print("Uso: python todo.py remove <número>")
             return
         remove_task(int(sys.argv[2]))
+    elif command == "clear":
+        clear_tasks()
     else:
         print(f"Comando desconhecido: {command}")
 
