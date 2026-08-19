@@ -60,6 +60,20 @@ def remove_task(index):
     print(f"Tarefa removida: {removed['description']}")
 
 
+def search_tasks(query):
+    tasks = load_tasks()
+    matches = [
+        (i, task) for i, task in enumerate(tasks, start=1)
+        if query.lower() in task["description"].lower()
+    ]
+    if not matches:
+        print(f"Nenhuma tarefa encontrada para: {query}")
+        return
+    for i, task in matches:
+        status = "x" if task["done"] else " "
+        print(f"[{status}] {i}. {task['description']}")
+
+
 def edit_task(index, new_description):
     tasks = load_tasks()
     if index < 1 or index > len(tasks):
@@ -107,6 +121,11 @@ def main():
             print("Uso: python todo.py edit <número> <nova descrição>")
             return
         edit_task(int(sys.argv[2]), " ".join(sys.argv[3:]))
+    elif command == "search":
+        if len(sys.argv) < 3:
+            print("Uso: python todo.py search <termo>")
+            return
+        search_tasks(" ".join(sys.argv[2:]))
     else:
         print(f"Comando desconhecido: {command}")
 
