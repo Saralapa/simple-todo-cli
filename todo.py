@@ -17,11 +17,11 @@ def save_tasks(tasks):
         json.dump(tasks, f, ensure_ascii=False, indent=2)
 
 
-def add_task(description):
+def add_task(description, priority="normal"):
     tasks = load_tasks()
-    tasks.append({"description": description, "done": False})
+    tasks.append({"description": description, "done": False, "priority": priority})
     save_tasks(tasks)
-    print(f"Tarefa adicionada: {description}")
+    print(f"Tarefa adicionada [{priority}]: {description}")
 
 
 def list_tasks(pending_only=False):
@@ -34,7 +34,8 @@ def list_tasks(pending_only=False):
         if pending_only and task["done"]:
             continue
         status = "x" if task["done"] else " "
-        print(f"[{status}] {i}. {task['description']}")
+        priority = task.get("priority", "normal")
+        print(f"[{status}] {i}. ({priority}) {task['description']}")
         shown = True
     if pending_only and not shown:
         print("Nenhuma tarefa pendente.")
@@ -71,7 +72,8 @@ def search_tasks(query):
         return
     for i, task in matches:
         status = "x" if task["done"] else " "
-        print(f"[{status}] {i}. {task['description']}")
+        priority = task.get("priority", "normal")
+        print(f"[{status}] {i}. ({priority}) {task['description']}")
 
 
 def edit_task(index, new_description):
@@ -98,9 +100,15 @@ def main():
 
     if command == "add":
         if len(sys.argv) < 3:
-            print("Uso: python todo.py add <descrição>")
+            print("Uso: python todo.py add <descrição> [--priority alta|normal|baixa]")
             return
-        add_task(" ".join(sys.argv[2:]))
+        args = sys.argv[2:]
+        priority = "normal"
+        if "--priority" in args:
+            idx = args.index("--priority")
+            priority = args[idx + 1]
+            args = args[:idx] + args[idx + 2:]
+        add_task(" ".join(args), priority=priority)
     elif command == "list":
         pending_only = "--pending" in sys.argv[2:]
         list_tasks(pending_only=pending_only)
