@@ -24,14 +24,20 @@ def add_task(description):
     print(f"Tarefa adicionada: {description}")
 
 
-def list_tasks():
+def list_tasks(pending_only=False):
     tasks = load_tasks()
     if not tasks:
         print("Nenhuma tarefa cadastrada.")
         return
+    shown = False
     for i, task in enumerate(tasks, start=1):
+        if pending_only and task["done"]:
+            continue
         status = "x" if task["done"] else " "
         print(f"[{status}] {i}. {task['description']}")
+        shown = True
+    if pending_only and not shown:
+        print("Nenhuma tarefa pendente.")
 
 
 def mark_done(index):
@@ -72,7 +78,8 @@ def main():
             return
         add_task(" ".join(sys.argv[2:]))
     elif command == "list":
-        list_tasks()
+        pending_only = "--pending" in sys.argv[2:]
+        list_tasks(pending_only=pending_only)
     elif command == "done":
         if len(sys.argv) < 3:
             print("Uso: python todo.py done <número>")
