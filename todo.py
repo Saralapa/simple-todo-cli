@@ -34,9 +34,29 @@ def list_tasks():
         print(f"[{status}] {i}. {task['description']}")
 
 
+def mark_done(index):
+    tasks = load_tasks()
+    if index < 1 or index > len(tasks):
+        print(f"Tarefa {index} não encontrada.")
+        return
+    tasks[index - 1]["done"] = True
+    save_tasks(tasks)
+    print(f"Tarefa {index} marcada como concluída.")
+
+
+def remove_task(index):
+    tasks = load_tasks()
+    if index < 1 or index > len(tasks):
+        print(f"Tarefa {index} não encontrada.")
+        return
+    removed = tasks.pop(index - 1)
+    save_tasks(tasks)
+    print(f"Tarefa removida: {removed['description']}")
+
+
 def main():
     if len(sys.argv) < 2:
-        print("Uso: python todo.py <add|list> [argumentos]")
+        print("Uso: python todo.py <add|list|done|remove> [argumentos]")
         return
 
     command = sys.argv[1]
@@ -48,6 +68,16 @@ def main():
         add_task(" ".join(sys.argv[2:]))
     elif command == "list":
         list_tasks()
+    elif command == "done":
+        if len(sys.argv) < 3:
+            print("Uso: python todo.py done <número>")
+            return
+        mark_done(int(sys.argv[2]))
+    elif command == "remove":
+        if len(sys.argv) < 3:
+            print("Uso: python todo.py remove <número>")
+            return
+        remove_task(int(sys.argv[2]))
     else:
         print(f"Comando desconhecido: {command}")
 
