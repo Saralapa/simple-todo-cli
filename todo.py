@@ -60,6 +60,16 @@ def remove_task(index):
     print(f"Tarefa removida: {removed['description']}")
 
 
+def edit_task(index, new_description):
+    tasks = load_tasks()
+    if index < 1 or index > len(tasks):
+        print(f"Tarefa {index} não encontrada.")
+        return
+    tasks[index - 1]["description"] = new_description
+    save_tasks(tasks)
+    print(f"Tarefa {index} atualizada: {new_description}")
+
+
 def clear_tasks():
     save_tasks([])
     print("Todas as tarefas foram removidas.")
@@ -92,6 +102,11 @@ def main():
         remove_task(int(sys.argv[2]))
     elif command == "clear":
         clear_tasks()
+    elif command == "edit":
+        if len(sys.argv) < 4:
+            print("Uso: python todo.py edit <número> <nova descrição>")
+            return
+        edit_task(int(sys.argv[2]), " ".join(sys.argv[3:]))
     else:
         print(f"Comando desconhecido: {command}")
 
