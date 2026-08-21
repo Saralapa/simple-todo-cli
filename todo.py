@@ -61,10 +61,16 @@ def list_tasks(pending_only=False, sort_priority=False, done_only=False):
         print("Nenhuma tarefa concluída.")
 
 
-def mark_done(index):
-    tasks = load_tasks()
+def _validate_index(tasks, index):
     if index < 1 or index > len(tasks):
         print(f"Tarefa {index} não encontrada.")
+        return False
+    return True
+
+
+def mark_done(index):
+    tasks = load_tasks()
+    if not _validate_index(tasks, index):
         return
     tasks[index - 1]["done"] = True
     save_tasks(tasks)
@@ -73,8 +79,7 @@ def mark_done(index):
 
 def mark_undone(index):
     tasks = load_tasks()
-    if index < 1 or index > len(tasks):
-        print(f"Tarefa {index} não encontrada.")
+    if not _validate_index(tasks, index):
         return
     tasks[index - 1]["done"] = False
     save_tasks(tasks)
@@ -83,8 +88,7 @@ def mark_undone(index):
 
 def remove_task(index):
     tasks = load_tasks()
-    if index < 1 or index > len(tasks):
-        print(f"Tarefa {index} não encontrada.")
+    if not _validate_index(tasks, index):
         return
     removed = tasks.pop(index - 1)
     save_tasks(tasks)
@@ -108,8 +112,7 @@ def search_tasks(query):
 
 def edit_task(index, new_description):
     tasks = load_tasks()
-    if index < 1 or index > len(tasks):
-        print(f"Tarefa {index} não encontrada.")
+    if not _validate_index(tasks, index):
         return
     tasks[index - 1]["description"] = new_description
     save_tasks(tasks)
