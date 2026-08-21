@@ -24,10 +24,14 @@ def add_task(description, priority="normal"):
     if priority not in VALID_PRIORITIES:
         print(f"Prioridade inválida: {priority}. Use uma de: {', '.join(VALID_PRIORITIES)}")
         return
+    descriptions = [d.strip() for d in description.split(";") if d.strip()]
+    if not descriptions:
+        return
     tasks = load_tasks()
-    tasks.append({"description": description, "done": False, "priority": priority})
+    for desc in descriptions:
+        tasks.append({"description": desc, "done": False, "priority": priority})
+        print(f"Tarefa adicionada [{priority}]: {desc}")
     save_tasks(tasks)
-    print(f"Tarefa adicionada [{priority}]: {description}")
 
 
 PRIORITY_ORDER = {"alta": 0, "normal": 1, "baixa": 2}
