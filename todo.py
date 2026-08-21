@@ -140,6 +140,14 @@ def clear_tasks():
     print("Todas as tarefas foram removidas.")
 
 
+def _parse_index(raw):
+    try:
+        return int(raw)
+    except ValueError:
+        print(f"Número de tarefa inválido: {raw}")
+        return None
+
+
 def main():
     if len(sys.argv) < 2:
         print("Uso: python todo.py <add|list|done|remove|clear> [argumentos]")
@@ -167,17 +175,23 @@ def main():
         if len(sys.argv) < 3:
             print("Uso: python todo.py done <número>")
             return
-        mark_done(int(sys.argv[2]))
+        index = _parse_index(sys.argv[2])
+        if index is not None:
+            mark_done(index)
     elif command == "undone":
         if len(sys.argv) < 3:
             print("Uso: python todo.py undone <número>")
             return
-        mark_undone(int(sys.argv[2]))
+        index = _parse_index(sys.argv[2])
+        if index is not None:
+            mark_undone(index)
     elif command == "remove":
         if len(sys.argv) < 3:
             print("Uso: python todo.py remove <número>")
             return
-        remove_task(int(sys.argv[2]))
+        index = _parse_index(sys.argv[2])
+        if index is not None:
+            remove_task(index)
     elif command == "clear":
         clear_tasks()
     elif command == "count":
@@ -188,7 +202,9 @@ def main():
         if len(sys.argv) < 4:
             print(f"Uso: python todo.py {command} <número> <nova descrição>")
             return
-        edit_task(int(sys.argv[2]), " ".join(sys.argv[3:]))
+        index = _parse_index(sys.argv[2])
+        if index is not None:
+            edit_task(index, " ".join(sys.argv[3:]))
     elif command == "search":
         if len(sys.argv) < 3:
             print("Uso: python todo.py search <termo>")
