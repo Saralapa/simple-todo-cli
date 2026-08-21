@@ -72,6 +72,17 @@ def test_add_task_default_priority(tmp_path, monkeypatch):
     assert tasks[0]["priority"] == "normal"
 
 
+def test_export_tasks(tmp_path, monkeypatch):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Tarefa exportada")
+    export_path = tmp_path / "export.txt"
+    todo.export_tasks(str(export_path))
+
+    content = export_path.read_text(encoding="utf-8")
+    assert "Tarefa exportada" in content
+
+
 def test_list_done_only(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
 
