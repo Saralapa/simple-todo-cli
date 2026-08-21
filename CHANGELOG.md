@@ -22,3 +22,5 @@
 - Comando `undone` para desmarcar tarefas concluídas.
 - Filtro `--done` no comando `list`.
 - Mensagem de erro amigável para índices inválidos.
+- Comando `export` para salvar tarefas em arquivo `.txt`.
+- Refactor: validação de índice extraída para `_validate_index`.
