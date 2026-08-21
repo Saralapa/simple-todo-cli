@@ -135,6 +135,17 @@ def show_stats():
     print(f"Progresso: {done}/{total} ({percent:.1f}%)")
 
 
+def export_tasks(path):
+    tasks = load_tasks()
+    export_path = Path(path)
+    with open(export_path, "w", encoding="utf-8") as f:
+        for i, task in enumerate(tasks, start=1):
+            status = "x" if task["done"] else " "
+            priority = task.get("priority", "normal")
+            f.write(f"[{status}] {i}. ({priority}) {task['description']}\n")
+    print(f"Tarefas exportadas para: {export_path}")
+
+
 def clear_tasks():
     save_tasks([])
     print("Todas as tarefas foram removidas.")
@@ -198,6 +209,11 @@ def main():
         count_tasks()
     elif command == "stats":
         show_stats()
+    elif command == "export":
+        if len(sys.argv) < 3:
+            print("Uso: python todo.py export <arquivo.txt>")
+            return
+        export_tasks(sys.argv[2])
     elif command in ("edit", "rename"):
         if len(sys.argv) < 4:
             print(f"Uso: python todo.py {command} <número> <nova descrição>")
