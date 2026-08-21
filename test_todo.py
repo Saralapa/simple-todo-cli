@@ -72,6 +72,20 @@ def test_add_task_default_priority(tmp_path, monkeypatch):
     assert tasks[0]["priority"] == "normal"
 
 
+def test_list_done_only(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Tarefa concluída")
+    todo.add_task("Tarefa pendente")
+    todo.mark_done(1)
+    capsys.readouterr()
+    todo.list_tasks(done_only=True)
+
+    out = capsys.readouterr().out
+    assert "Tarefa concluída" in out
+    assert "Tarefa pendente" not in out
+
+
 def test_mark_undone(tmp_path, monkeypatch):
     monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
 
