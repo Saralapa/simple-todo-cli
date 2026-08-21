@@ -37,7 +37,7 @@ def add_task(description, priority="normal"):
 PRIORITY_ORDER = {"alta": 0, "normal": 1, "baixa": 2}
 
 
-def list_tasks(pending_only=False, sort_priority=False):
+def list_tasks(pending_only=False, sort_priority=False, done_only=False):
     tasks = load_tasks()
     if not tasks:
         print("Nenhuma tarefa cadastrada.")
@@ -49,12 +49,16 @@ def list_tasks(pending_only=False, sort_priority=False):
     for i, task in indexed:
         if pending_only and task["done"]:
             continue
+        if done_only and not task["done"]:
+            continue
         status = "x" if task["done"] else " "
         priority = task.get("priority", "normal")
         print(f"[{status}] {i}. ({priority}) {task['description']}")
         shown = True
     if pending_only and not shown:
         print("Nenhuma tarefa pendente.")
+    elif done_only and not shown:
+        print("Nenhuma tarefa concluída.")
 
 
 def mark_done(index):
@@ -157,7 +161,8 @@ def main():
     elif command == "list":
         pending_only = "--pending" in sys.argv[2:]
         sort_priority = "--sort-priority" in sys.argv[2:]
-        list_tasks(pending_only=pending_only, sort_priority=sort_priority)
+        done_only = "--done" in sys.argv[2:]
+        list_tasks(pending_only=pending_only, sort_priority=sort_priority, done_only=done_only)
     elif command == "done":
         if len(sys.argv) < 3:
             print("Uso: python todo.py done <número>")
