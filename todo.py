@@ -100,6 +100,17 @@ def count_tasks():
     print(f"Total: {total} | Concluídas: {done} | Pendentes: {pending}")
 
 
+def show_stats():
+    tasks = load_tasks()
+    total = len(tasks)
+    if total == 0:
+        print("Nenhuma tarefa cadastrada.")
+        return
+    done = sum(1 for t in tasks if t["done"])
+    percent = (done / total) * 100
+    print(f"Progresso: {done}/{total} ({percent:.1f}%)")
+
+
 def clear_tasks():
     save_tasks([])
     print("Todas as tarefas foram removidas.")
@@ -140,6 +151,8 @@ def main():
         clear_tasks()
     elif command == "count":
         count_tasks()
+    elif command == "stats":
+        show_stats()
     elif command == "edit":
         if len(sys.argv) < 4:
             print("Uso: python todo.py edit <número> <nova descrição>")
