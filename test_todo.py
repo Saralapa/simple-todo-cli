@@ -72,6 +72,14 @@ def test_add_task_default_priority(tmp_path, monkeypatch):
     assert tasks[0]["priority"] == "normal"
 
 
+def test_add_multiple_tasks(tmp_path, monkeypatch):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Tarefa A; Tarefa B; Tarefa C")
+    tasks = todo.load_tasks()
+    assert [t["description"] for t in tasks] == ["Tarefa A", "Tarefa B", "Tarefa C"]
+
+
 def test_add_task_invalid_priority(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
 
