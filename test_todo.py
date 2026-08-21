@@ -72,6 +72,16 @@ def test_add_task_default_priority(tmp_path, monkeypatch):
     assert tasks[0]["priority"] == "normal"
 
 
+def test_mark_undone(tmp_path, monkeypatch):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Lavar louça")
+    todo.mark_done(1)
+    todo.mark_undone(1)
+    tasks = todo.load_tasks()
+    assert tasks[0]["done"] is False
+
+
 def test_add_multiple_tasks(tmp_path, monkeypatch):
     monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
 
