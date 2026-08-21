@@ -160,9 +160,9 @@ def main():
         count_tasks()
     elif command == "stats":
         show_stats()
-    elif command == "edit":
+    elif command in ("edit", "rename"):
         if len(sys.argv) < 4:
-            print("Uso: python todo.py edit <número> <nova descrição>")
+            print(f"Uso: python todo.py {command} <número> <nova descrição>")
             return
         edit_task(int(sys.argv[2]), " ".join(sys.argv[3:]))
     elif command == "search":
