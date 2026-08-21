@@ -86,6 +86,14 @@ def edit_task(index, new_description):
     print(f"Tarefa {index} atualizada: {new_description}")
 
 
+def count_tasks():
+    tasks = load_tasks()
+    total = len(tasks)
+    done = sum(1 for t in tasks if t["done"])
+    pending = total - done
+    print(f"Total: {total} | Concluídas: {done} | Pendentes: {pending}")
+
+
 def clear_tasks():
     save_tasks([])
     print("Todas as tarefas foram removidas.")
@@ -124,6 +132,8 @@ def main():
         remove_task(int(sys.argv[2]))
     elif command == "clear":
         clear_tasks()
+    elif command == "count":
+        count_tasks()
     elif command == "edit":
         if len(sys.argv) < 4:
             print("Uso: python todo.py edit <número> <nova descrição>")
