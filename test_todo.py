@@ -70,3 +70,17 @@ def test_add_task_default_priority(tmp_path, monkeypatch):
     todo.add_task("Tarefa comum")
     tasks = todo.load_tasks()
     assert tasks[0]["priority"] == "normal"
+
+
+def test_count_tasks(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Tarefa 1")
+    todo.add_task("Tarefa 2")
+    todo.mark_done(1)
+    todo.count_tasks()
+
+    out = capsys.readouterr().out
+    assert "Total: 2" in out
+    assert "Concluídas: 1" in out
+    assert "Pendentes: 1" in out
