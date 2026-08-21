@@ -72,6 +72,15 @@ def test_add_task_default_priority(tmp_path, monkeypatch):
     assert tasks[0]["priority"] == "normal"
 
 
+def test_add_task_invalid_priority(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Tarefa inválida", priority="urgentissimo")
+    out = capsys.readouterr().out
+    assert "Prioridade inválida" in out
+    assert todo.load_tasks() == []
+
+
 def test_count_tasks(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
 
