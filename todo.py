@@ -30,13 +30,19 @@ def add_task(description, priority="normal"):
     print(f"Tarefa adicionada [{priority}]: {description}")
 
 
-def list_tasks(pending_only=False):
+PRIORITY_ORDER = {"alta": 0, "normal": 1, "baixa": 2}
+
+
+def list_tasks(pending_only=False, sort_priority=False):
     tasks = load_tasks()
     if not tasks:
         print("Nenhuma tarefa cadastrada.")
         return
+    indexed = list(enumerate(tasks, start=1))
+    if sort_priority:
+        indexed.sort(key=lambda pair: PRIORITY_ORDER.get(pair[1].get("priority", "normal"), 1))
     shown = False
-    for i, task in enumerate(tasks, start=1):
+    for i, task in indexed:
         if pending_only and task["done"]:
             continue
         status = "x" if task["done"] else " "
@@ -136,7 +142,8 @@ def main():
         add_task(" ".join(args), priority=priority)
     elif command == "list":
         pending_only = "--pending" in sys.argv[2:]
-        list_tasks(pending_only=pending_only)
+        sort_priority = "--sort-priority" in sys.argv[2:]
+        list_tasks(pending_only=pending_only, sort_priority=sort_priority)
     elif command == "done":
         if len(sys.argv) < 3:
             print("Uso: python todo.py done <número>")
