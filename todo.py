@@ -17,7 +17,13 @@ def save_tasks(tasks):
         json.dump(tasks, f, ensure_ascii=False, indent=2)
 
 
+VALID_PRIORITIES = ("alta", "normal", "baixa")
+
+
 def add_task(description, priority="normal"):
+    if priority not in VALID_PRIORITIES:
+        print(f"Prioridade inválida: {priority}. Use uma de: {', '.join(VALID_PRIORITIES)}")
+        return
     tasks = load_tasks()
     tasks.append({"description": description, "done": False, "priority": priority})
     save_tasks(tasks)
