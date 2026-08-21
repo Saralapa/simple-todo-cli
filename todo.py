@@ -67,6 +67,16 @@ def mark_done(index):
     print(f"Tarefa {index} marcada como concluída.")
 
 
+def mark_undone(index):
+    tasks = load_tasks()
+    if index < 1 or index > len(tasks):
+        print(f"Tarefa {index} não encontrada.")
+        return
+    tasks[index - 1]["done"] = False
+    save_tasks(tasks)
+    print(f"Tarefa {index} marcada como pendente.")
+
+
 def remove_task(index):
     tasks = load_tasks()
     if index < 1 or index > len(tasks):
@@ -153,6 +163,11 @@ def main():
             print("Uso: python todo.py done <número>")
             return
         mark_done(int(sys.argv[2]))
+    elif command == "undone":
+        if len(sys.argv) < 3:
+            print("Uso: python todo.py undone <número>")
+            return
+        mark_undone(int(sys.argv[2]))
     elif command == "remove":
         if len(sys.argv) < 3:
             print("Uso: python todo.py remove <número>")
