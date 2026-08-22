@@ -30,6 +30,28 @@ def test_add_task_without_due(tmp_path, monkeypatch):
     assert "due" not in tasks[0]
 
 
+def test_import_tasks(tmp_path, monkeypatch):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    import_path = tmp_path / "import.json"
+    import_path.write_text(
+        json.dumps([{"description": "Tarefa importada", "done": False, "priority": "normal"}]),
+        encoding="utf-8",
+    )
+    todo.import_tasks(str(import_path))
+
+    tasks = todo.load_tasks()
+    assert tasks[0]["description"] == "Tarefa importada"
+
+
+def test_import_tasks_missing_file(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.import_tasks(str(tmp_path / "nao_existe.json"))
+    out = capsys.readouterr().out
+    assert "não encontrado" in out
+
+
 def test_duplicate_task(tmp_path, monkeypatch):
     monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
 
