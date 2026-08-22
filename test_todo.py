@@ -107,6 +107,19 @@ def test_clear_tasks(tmp_path, monkeypatch):
     assert todo.load_tasks() == []
 
 
+def test_clear_tasks_done_only(tmp_path, monkeypatch):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Tarefa concluída")
+    todo.add_task("Tarefa pendente")
+    todo.mark_done(1)
+    todo.clear_tasks(done_only=True)
+
+    tasks = todo.load_tasks()
+    assert len(tasks) == 1
+    assert tasks[0]["description"] == "Tarefa pendente"
+
+
 def test_search_tasks(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
 
