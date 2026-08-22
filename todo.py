@@ -181,9 +181,16 @@ def list_overdue(today=None):
         print(f"[ ] {i}. ({priority}) {task['description']} (prazo: {task['due']})")
 
 
-def clear_tasks():
-    save_tasks([])
-    print("Todas as tarefas foram removidas.")
+def clear_tasks(done_only=False):
+    if not done_only:
+        save_tasks([])
+        print("Todas as tarefas foram removidas.")
+        return
+    tasks = load_tasks()
+    remaining = [t for t in tasks if not t["done"]]
+    removed_count = len(tasks) - len(remaining)
+    save_tasks(remaining)
+    print(f"{removed_count} tarefa(s) concluída(s) removida(s).")
 
 
 def _parse_index(raw):
@@ -244,7 +251,8 @@ def main():
         if index is not None:
             remove_task(index)
     elif command == "clear":
-        clear_tasks()
+        done_only = "--done" in sys.argv[2:]
+        clear_tasks(done_only=done_only)
     elif command == "overdue":
         list_overdue()
     elif command == "duplicate":
