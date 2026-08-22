@@ -1,5 +1,6 @@
 import json
 import sys
+from datetime import date
 from pathlib import Path
 
 DB_PATH = Path(__file__).parent / "tasks.json"
@@ -154,6 +155,21 @@ def export_tasks(path):
     print(f"Tarefas exportadas para: {export_path}")
 
 
+def list_overdue(today=None):
+    today = today or date.today().isoformat()
+    tasks = load_tasks()
+    matches = [
+        (i, task) for i, task in enumerate(tasks, start=1)
+        if not task["done"] and task.get("due") and task["due"] < today
+    ]
+    if not matches:
+        print("Nenhuma tarefa vencida.")
+        return
+    for i, task in matches:
+        priority = task.get("priority", "normal")
+        print(f"[ ] {i}. ({priority}) {task['description']} (prazo: {task['due']})")
+
+
 def clear_tasks():
     save_tasks([])
     print("Todas as tarefas foram removidas.")
@@ -218,6 +234,8 @@ def main():
             remove_task(index)
     elif command == "clear":
         clear_tasks()
+    elif command == "overdue":
+        list_overdue()
     elif command == "count":
         count_tasks()
     elif command == "stats":
