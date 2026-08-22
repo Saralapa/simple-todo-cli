@@ -225,14 +225,28 @@ def _parse_index(raw):
         return None
 
 
+COMMANDS = (
+    "add", "list", "done", "undone", "remove", "edit", "rename", "search",
+    "clear", "count", "stats", "export", "import", "move", "duplicate",
+    "overdue",
+)
+
+
+def show_help():
+    print("Uso: python todo.py <comando> [argumentos]")
+    print(f"Comandos disponíveis: {', '.join(COMMANDS)}")
+
+
 def main():
     if len(sys.argv) < 2:
-        print("Uso: python todo.py <add|list|done|remove|clear> [argumentos]")
+        show_help()
         return
 
     command = sys.argv[1]
 
-    if command == "add":
+    if command in ("help", "-h", "--help"):
+        show_help()
+    elif command == "add":
         if len(sys.argv) < 3:
             print("Uso: python todo.py add <descrição> [--priority alta|normal|baixa]")
             return
