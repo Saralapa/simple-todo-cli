@@ -122,11 +122,12 @@ def duplicate_task(index):
     print(f"Tarefa duplicada: {clone['description']}")
 
 
-def search_tasks(query):
+def search_tasks(query, pending_only=False):
     tasks = load_tasks()
     matches = [
         (i, task) for i, task in enumerate(tasks, start=1)
         if query.lower() in task["description"].lower()
+        and not (pending_only and task["done"])
     ]
     if not matches:
         print(f"Nenhuma tarefa encontrada para: {query}")
@@ -318,7 +319,11 @@ def main():
         if len(sys.argv) < 3:
             print("Uso: python todo.py search <termo>")
             return
-        search_tasks(" ".join(sys.argv[2:]))
+        args = sys.argv[2:]
+        pending_only = "--pending" in args
+        if pending_only:
+            args = [a for a in args if a != "--pending"]
+        search_tasks(" ".join(args), pending_only=pending_only)
     else:
         print(f"Comando desconhecido: {command}")
 
