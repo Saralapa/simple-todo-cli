@@ -4,6 +4,13 @@ import json
 import todo
 
 
+def test_show_help(capsys):
+    todo.show_help()
+    out = capsys.readouterr().out
+    assert "add" in out
+    assert "search" in out
+
+
 def test_add_and_list(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
 
