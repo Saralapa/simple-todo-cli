@@ -14,6 +14,22 @@ def test_add_and_list(tmp_path, monkeypatch, capsys):
     assert "Comprar pão" in out
 
 
+def test_add_task_with_due(tmp_path, monkeypatch):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Pagar aluguel", due="2026-09-01")
+    tasks = todo.load_tasks()
+    assert tasks[0]["due"] == "2026-09-01"
+
+
+def test_add_task_without_due(tmp_path, monkeypatch):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Tarefa sem prazo")
+    tasks = todo.load_tasks()
+    assert "due" not in tasks[0]
+
+
 def test_mark_done_and_remove(tmp_path, monkeypatch):
     monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
 
