@@ -30,6 +30,31 @@ def test_add_task_without_due(tmp_path, monkeypatch):
     assert "due" not in tasks[0]
 
 
+def test_list_overdue(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Tarefa vencida", due="2020-01-01")
+    todo.add_task("Tarefa futura", due="2099-01-01")
+    capsys.readouterr()
+    todo.list_overdue(today="2026-01-01")
+
+    out = capsys.readouterr().out
+    assert "Tarefa vencida" in out
+    assert "Tarefa futura" not in out
+
+
+def test_list_overdue_ignores_done(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Tarefa vencida concluída", due="2020-01-01")
+    todo.mark_done(1)
+    capsys.readouterr()
+    todo.list_overdue(today="2026-01-01")
+
+    out = capsys.readouterr().out
+    assert "Nenhuma tarefa vencida." in out
+
+
 def test_mark_done_and_remove(tmp_path, monkeypatch):
     monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
 
