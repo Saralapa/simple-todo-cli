@@ -24,3 +24,15 @@
 - Mensagem de erro amigável para índices inválidos.
 - Comando `export` para salvar tarefas em arquivo `.txt`.
 - Refactor: validação de índice extraída para `_validate_index`.
+
+## 0.3.0
+
+- Campo de prazo (`--due`) nas tarefas, exibido em `list` e `search`.
+- Comando `overdue` para listar tarefas vencidas.
+- Comando `duplicate` para clonar uma tarefa existente.
+- Filtro `--done` no comando `clear`.
+- Comando `import` para carregar tarefas de um arquivo JSON.
+- Comando `move` para reordenar tarefas.
+- Correção de teste instável em `test_search_tasks`.
+- Filtro `--pending` no comando `search`.
+- Comando `help` listando todos os comandos disponíveis.
