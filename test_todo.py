@@ -168,6 +168,7 @@ def test_search_tasks(tmp_path, monkeypatch, capsys):
 
     todo.add_task("Comprar leite")
     todo.add_task("Estudar Python")
+    capsys.readouterr()
     todo.search_tasks("python")
 
     out = capsys.readouterr().out
