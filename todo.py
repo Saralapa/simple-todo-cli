@@ -101,6 +101,16 @@ def remove_task(index):
     print(f"Tarefa removida: {removed['description']}")
 
 
+def move_task(from_index, to_index):
+    tasks = load_tasks()
+    if not _validate_index(tasks, from_index) or not _validate_index(tasks, to_index):
+        return
+    task = tasks.pop(from_index - 1)
+    tasks.insert(to_index - 1, task)
+    save_tasks(tasks)
+    print(f"Tarefa movida da posição {from_index} para {to_index}.")
+
+
 def duplicate_task(index):
     tasks = load_tasks()
     if not _validate_index(tasks, index):
@@ -275,6 +285,14 @@ def main():
         index = _parse_index(sys.argv[2])
         if index is not None:
             duplicate_task(index)
+    elif command == "move":
+        if len(sys.argv) < 4:
+            print("Uso: python todo.py move <de> <para>")
+            return
+        from_index = _parse_index(sys.argv[2])
+        to_index = _parse_index(sys.argv[3])
+        if from_index is not None and to_index is not None:
+            move_task(from_index, to_index)
     elif command == "count":
         count_tasks()
     elif command == "stats":
