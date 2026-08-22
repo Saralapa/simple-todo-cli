@@ -30,6 +30,27 @@ def test_add_task_without_due(tmp_path, monkeypatch):
     assert "due" not in tasks[0]
 
 
+def test_move_task(tmp_path, monkeypatch):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Tarefa 1")
+    todo.add_task("Tarefa 2")
+    todo.add_task("Tarefa 3")
+    todo.move_task(3, 1)
+
+    tasks = todo.load_tasks()
+    assert [t["description"] for t in tasks] == ["Tarefa 3", "Tarefa 1", "Tarefa 2"]
+
+
+def test_move_task_invalid_index(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Tarefa 1")
+    todo.move_task(1, 5)
+    out = capsys.readouterr().out
+    assert "não encontrada" in out
+
+
 def test_import_tasks(tmp_path, monkeypatch):
     monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
 
