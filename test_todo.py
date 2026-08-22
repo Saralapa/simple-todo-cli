@@ -30,6 +30,28 @@ def test_add_task_without_due(tmp_path, monkeypatch):
     assert "due" not in tasks[0]
 
 
+def test_duplicate_task(tmp_path, monkeypatch):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Tarefa original", priority="alta")
+    todo.mark_done(1)
+    todo.duplicate_task(1)
+    tasks = todo.load_tasks()
+
+    assert len(tasks) == 2
+    assert tasks[1]["description"] == "Tarefa original"
+    assert tasks[1]["priority"] == "alta"
+    assert tasks[1]["done"] is False
+
+
+def test_duplicate_invalid_index(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.duplicate_task(1)
+    out = capsys.readouterr().out
+    assert "não encontrada" in out
+
+
 def test_list_overdue(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
 
