@@ -155,6 +155,19 @@ def show_stats():
     print(f"Progresso: {done}/{total} ({percent:.1f}%)")
 
 
+def import_tasks(path):
+    import_path = Path(path)
+    if not import_path.exists():
+        print(f"Arquivo não encontrado: {import_path}")
+        return
+    with open(import_path, "r", encoding="utf-8") as f:
+        imported = json.load(f)
+    tasks = load_tasks()
+    tasks.extend(imported)
+    save_tasks(tasks)
+    print(f"{len(imported)} tarefa(s) importada(s) de: {import_path}")
+
+
 def export_tasks(path):
     tasks = load_tasks()
     export_path = Path(path)
@@ -271,6 +284,11 @@ def main():
             print("Uso: python todo.py export <arquivo.txt>")
             return
         export_tasks(sys.argv[2])
+    elif command == "import":
+        if len(sys.argv) < 3:
+            print("Uso: python todo.py import <arquivo.json>")
+            return
+        import_tasks(sys.argv[2])
     elif command in ("edit", "rename"):
         if len(sys.argv) < 4:
             print(f"Uso: python todo.py {command} <número> <nova descrição>")
