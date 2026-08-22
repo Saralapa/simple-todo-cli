@@ -57,7 +57,8 @@ def list_tasks(pending_only=False, sort_priority=False, done_only=False):
             continue
         status = "x" if task["done"] else " "
         priority = task.get("priority", "normal")
-        print(f"[{status}] {i}. ({priority}) {task['description']}")
+        due_suffix = f" (prazo: {task['due']})" if task.get("due") else ""
+        print(f"[{status}] {i}. ({priority}) {task['description']}{due_suffix}")
         shown = True
     if pending_only and not shown:
         print("Nenhuma tarefa pendente.")
