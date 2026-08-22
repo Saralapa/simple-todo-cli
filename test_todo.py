@@ -30,6 +30,20 @@ def test_add_task_without_due(tmp_path, monkeypatch):
     assert "due" not in tasks[0]
 
 
+def test_search_tasks_pending_only(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
+
+    todo.add_task("Estudar Python básico")
+    todo.add_task("Estudar Python avançado")
+    todo.mark_done(1)
+    capsys.readouterr()
+    todo.search_tasks("python", pending_only=True)
+
+    out = capsys.readouterr().out
+    assert "Estudar Python avançado" in out
+    assert "Estudar Python básico" not in out
+
+
 def test_move_task(tmp_path, monkeypatch):
     monkeypatch.setattr(todo, "DB_PATH", tmp_path / "tasks.json")
 
