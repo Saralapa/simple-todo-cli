@@ -20,7 +20,7 @@ def save_tasks(tasks):
 VALID_PRIORITIES = ("alta", "normal", "baixa")
 
 
-def add_task(description, priority="normal"):
+def add_task(description, priority="normal", due=None):
     if priority not in VALID_PRIORITIES:
         print(f"Prioridade inválida: {priority}. Use uma de: {', '.join(VALID_PRIORITIES)}")
         return
@@ -29,8 +29,12 @@ def add_task(description, priority="normal"):
         return
     tasks = load_tasks()
     for desc in descriptions:
-        tasks.append({"description": desc, "done": False, "priority": priority})
-        print(f"Tarefa adicionada [{priority}]: {desc}")
+        task = {"description": desc, "done": False, "priority": priority}
+        if due:
+            task["due"] = due
+        tasks.append(task)
+        suffix = f" (prazo: {due})" if due else ""
+        print(f"Tarefa adicionada [{priority}]: {desc}{suffix}")
     save_tasks(tasks)
 
 
@@ -179,7 +183,12 @@ def main():
             idx = args.index("--priority")
             priority = args[idx + 1]
             args = args[:idx] + args[idx + 2:]
-        add_task(" ".join(args), priority=priority)
+        due = None
+        if "--due" in args:
+            idx = args.index("--due")
+            due = args[idx + 1]
+            args = args[:idx] + args[idx + 2:]
+        add_task(" ".join(args), priority=priority, due=due)
     elif command == "list":
         pending_only = "--pending" in sys.argv[2:]
         sort_priority = "--sort-priority" in sys.argv[2:]
