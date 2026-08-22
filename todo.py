@@ -101,6 +101,17 @@ def remove_task(index):
     print(f"Tarefa removida: {removed['description']}")
 
 
+def duplicate_task(index):
+    tasks = load_tasks()
+    if not _validate_index(tasks, index):
+        return
+    clone = dict(tasks[index - 1])
+    clone["done"] = False
+    tasks.append(clone)
+    save_tasks(tasks)
+    print(f"Tarefa duplicada: {clone['description']}")
+
+
 def search_tasks(query):
     tasks = load_tasks()
     matches = [
@@ -236,6 +247,13 @@ def main():
         clear_tasks()
     elif command == "overdue":
         list_overdue()
+    elif command == "duplicate":
+        if len(sys.argv) < 3:
+            print("Uso: python todo.py duplicate <número>")
+            return
+        index = _parse_index(sys.argv[2])
+        if index is not None:
+            duplicate_task(index)
     elif command == "count":
         count_tasks()
     elif command == "stats":
